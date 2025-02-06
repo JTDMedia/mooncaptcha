@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rare Block Captcha</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        #message {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #credits {
+            font-size: 10px;
+            margin-top: 5px;
+            font-weight: lighter;
+        }
+    </style>
+</head>
+<body>
+    <h1>Are you human?</h1>
+    <p>Enter the rarest block in Minecraft (according to camman18):</p>
+    <input type="text" id="captchaInput" placeholder="Type here...">
+    <button onclick="validateCaptcha()">Submit</button>
+    <div id="message"></div>
+    <div id="credits">Powered by MoonCaptcha</div>
+    
+    <script>
+        function validateCaptcha() {
+            const userInput = document.getElementById("captchaInput").value.trim().toLowerCase();
+            if (userInput === "deepslate emerald ore") {
+                document.getElementById("message").innerText = "Completed Captcha!";
+                document.cookie = "captcha=success; max-age=300; path=/";
+            } else {
+                document.getElementById("message").innerText = "Failed Captcha!";
+                document.cookie = "captcha=fail; max-age=30; path=/";
+            }
+        }
+    </script>
+</body>
+</html>
