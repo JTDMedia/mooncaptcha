@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squid Game Captcha</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            background: url('https://static.vecteezy.com/system/resources/previews/004/260/750/non_2x/seoul-south-korea-2021-the-genuine-honeycomb-toffee-dalgona-candy-in-squid-game-dalgona-korea-traditional-sugar-candy-a-candy-circle-with-a-square-in-the-middle-illustration-vector.jpg');
+            background-size: cover;
+            border: 5px solid brown;
+            cursor: crosshair;
+        }
+        #message {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #credits {
+            font-size: 10px;
+            margin-top: 5px;
+            font-weight: lighter;
+        }
+    </style>
+</head>
+<body>
+    <h1>Are you human?</h1>
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+    <div id="message">Hold the mouse button and carve the cookie</div>
+    <div id="credits">Powered by MoonCaptcha</div>
+    <script>
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+        let points = [];
+        
+        canvas.addEventListener("mousedown", () => {
+            drawing = true;
+            points = [];
+        });
+        
+        canvas.addEventListener("mousemove", (event) => {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            points.push({x, y});
+            ctx.fillStyle = "black";
+            ctx.fillRect(x, y, 2, 2);
+        });
+        
+        canvas.addEventListener("mouseup", () => {
+            drawing = false;
+            validateShape();
+        });
+        
+        const validateShape = async () => {
+            let minX = Math.min(...points.map(p => p.x));
+            let maxX = Math.max(...points.map(p => p.x));
+            let minY = Math.min(...points.map(p => p.y));
+            let maxY = Math.max(...points.map(p => p.y));
+            
+            let width = maxX - minX;
+            let height = maxY - minY;
+            
+            if (width > 50 && height > 50 && Math.abs(width - height) < 10) {
+                document.getElementById("message").innerText = "Completed Captcha!";
+                document.cookie = "captcha=success; max-age=300; path=/";
+            } else {
+                document.getElementById("message").innerText = "Failed Captcha!";
+                document.cookie = "captcha=fail; max-age=30; path=/";
+            }
+        }
+    </script>
+</body>
+</html>
